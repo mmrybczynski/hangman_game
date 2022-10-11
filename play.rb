@@ -1,74 +1,92 @@
-class Hangman 
+class Hangman
 
     def initialize
-        @letters = ('a'..'z').to_a
-        @word = words.sample
-        @lives = 7
-        @correct_guess = []
+      @word = words.sample
+      @lives = 7
+      @word_teaser = ""
+  
+      @word.first.size.times do
+        @word_teaser += "_ "
+      end
     end
-
+  
     def words
-        [
-            ["cricket", "A game played by gentleman"],
-            ["jogging", "We are not walking"],
-            ["celebrate", "Remembering specjal moments"],
-            ["exotic", "Not from around here..."]
-        ]
+      [
+        ["iphone", "Nie andorid", "telefon"],
+        ["bieganie", "Na przykład nie bieżni", "sport"],
+        ["powerbank", "Naładuje telefon wszędzie gdzie jesteś", "zasilanie"]
+      ]
     end
-
-    def print_teaser
-
-        word_teaser = ""
-
-        @word.first.size.times do
-            word_teaser += "_ "
+  
+    def print_teaser last_guess = nil
+      update_teaser(last_guess) unless last_guess.nil?
+      puts @word_teaser
+    end
+  
+    def update_teaser last_guess
+      new_teaser = @word_teaser.split
+  
+      new_teaser.each_with_index do |letter, index|
+        # replace blank values with guessed letter if matches letter in word
+        if letter == '_' && @word.first[index] == last_guess
+          new_teaser[index] = last_guess
         end
-
-        puts word_teaser
+      end
+  
+      @word_teaser = new_teaser.join(' ')
     end
-
+  
     def make_guess
-        if @lives > 0
+      if @lives > 0
+        puts "Wprowadź literę:"
+        guess = gets.chomp
+  
+        good_guess = @word.first.include? guess
+  
+        if guess == "exit"
+          puts "Dziękuję za gre!"
 
-            guess = gets.chomp
-            puts "You guessed #{ guess }"
-
-            #if letter is not part of word then remove from letters array
-            good_guess = @word.first.include? guess
-            if good_guess
-                puts "You are correct"
-
-                @correct_guess << guess
-                print_teaser
-                make_guess
-            else
-                @lives -= 1
-                puts "Sorry... You have #{ @lives } guess left. Try again"
-                make_guess
-            end
-
+        elsif guess == "podpowiedz"
+            puts "Podpowiedź: #{ @word[1] }"
+            make_guess
+          
+        #if guess is longer than 1 letter
+        elsif guess.length > 1
+          puts "Możesz wprowadzić tylko jedną literę!"
+            make_guess
+          
+        elsif good_guess
+          puts "Poprawna litera!"
+  
+          print_teaser guess
+  
+          if @word.first == @word_teaser.split.join
+            puts "Gratuluje, wygrałeś"
+          else
+            make_guess
+          end
         else
-            puts "Game over..."
+          @lives -= 1
+          puts "Sorry... Pozostało ci #{ @lives } żyć. Spróbuj ponownie!"
+          make_guess
         end
-
+      else
+        puts "Gra skończona!"
+      end
     end
-
+  
     def begin
-        #ask for a letter
-        puts "New game started..."
-        puts "Your word is #{ @word.first.size } charactter long"
-        
-        print_teaser
-        
-        puts "Clue: #{ @word.last }"
-        
-        puts "Enter letter"
-        
-        make_guess
-        
+      # ask user for a letter
+      puts "Nowa gra... Twój wyraz ma #{ @word.first.size } liter i jest z kategorii #{ @word.last }"
+      puts "Aby wyjść z gry wpisz 'exit'"
+      puts "Aby uzyskać podopwiedź wpisz 'podpowiedz"
+      puts "Masz #{ @lives } żyć"
+      print_teaser
+  
+      make_guess
     end
-
-end
-
-game = Hangman.new
-game.begin
+  
+  end
+  
+  game = Hangman.new
+  game.begin
