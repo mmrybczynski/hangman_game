@@ -19,9 +19,9 @@ class Hangman
     end
   
     def print_teaser last_guess = nil
-      update_teaser(last_guess) unless last_guess.nil?
-      puts @word_teaser
-    end
+        update_teaser(last_guess) unless last_guess.nil?
+        puts @word_teaser
+      end
   
     def update_teaser last_guess
       new_teaser = @word_teaser.split
