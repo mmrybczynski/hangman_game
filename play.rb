@@ -1,4 +1,6 @@
 class Hangman
+    attr_accessor   :word, :lives, :word_teaser
+
 
     def initialize
       @word = words.sample
@@ -13,7 +15,10 @@ class Hangman
     def words
       [
         ["iphone", "Nie andorid", "telefon"],
-        ["bieganie", "Na przykład nie bieżni", "sport"],
+        ["bieganie", "Na przykład na bieżni", "sport"],
+        ["tramwaj", "Występuje w duzych miastach", "transport"],
+        ["trolejbus", "Dawny środek transportu, zalisny elektrycznie", "transport"],
+        ["kawior", "Dla bogatych", "jedzenie"],
         ["powerbank", "Naładuje telefon wszędzie gdzie jesteś", "zasilanie"]
       ]
     end
@@ -38,7 +43,8 @@ class Hangman
   
     def make_guess
       if @lives > 0
-        puts "Wprowadź literę:"
+        
+        puts "Wprowadź literę: "
         guess = gets.chomp
   
         good_guess = @word.first.include? guess
@@ -81,6 +87,7 @@ class Hangman
       puts "Aby wyjść z gry wpisz 'exit'"
       puts "Aby uzyskać podopwiedź wpisz 'podpowiedz"
       puts "Masz #{ @lives } żyć"
+
       print_teaser
   
       make_guess
